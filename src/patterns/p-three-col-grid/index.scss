@@ -1,0 +1,109 @@
+@charset "UTF-8";
+@use "sass:map";
+@import "vanilla-framework/scss/build";
+
+.app {
+    height: 100vh;
+    width: 90vw;
+    margin: auto;
+    padding: 100px 0;
+}
+
+.demo [class="p-3-col-grid__col"] {
+    margin-bottom: 2rem;
+}
+
+.p-3-col-grid {
+    @extend %vf-row;
+
+    grid-template-areas: 
+        "title content-grid";
+
+    .p-3-col-grid__title {
+        grid-area: title;
+        font-weight: $font-weight-bold;
+        grid-column: span calc($grid-columns / 4);
+
+        &::before {
+            content: '';
+            display: block;
+            width: calc(400% + 2rem);
+            border-bottom: solid 1px $colors--theme--border-default;
+        }
+
+        @media screen and (width < $breakpoint-large) {
+            grid-column: span $grid-columns-medium;
+        }
+
+        @media screen and (width < $breakpoint-small) {
+            grid-column: span $grid-columns-small;
+        }
+    }
+
+    .p-3-col-grid__content-grid {
+        grid-area: content-grid;
+        display: grid;
+        grid-column: span 9;
+        grid-template-columns: subgrid;
+    }
+
+    .p-3-col-grid__row {
+        display: grid;
+        grid-column: span 9;
+
+        .p-3-col-grid__col {
+            display: grid;
+            grid-template-rows: subgrid;
+            grid-column: span calc($grid-columns / 4);
+            grid-row: span 10;
+
+            @media screen and (width < $breakpoint-large) {
+                grid-template-columns: subgrid;
+                grid-template-areas:
+                    "header content"
+                    "header footer";
+                grid-column: span $grid-columns-medium;
+
+                .p-3-col-grid__col-header {
+                    grid-area: header;
+                    grid-column: span calc($grid-columns-medium / 2);
+                }
+
+                .p-3-col-grid__col-content {
+                    grid-area: content;
+                    grid-column: span calc($grid-columns-medium / 2);
+                }
+
+                .p-3-col-grid__col-footer {
+                    grid-area: footer;
+                    grid-column: span calc($grid-columns-medium / 2);
+                }
+
+                & {
+                    border-top-width: 1px;
+                    border-top-style: solid;
+                    border-top-color: $colors--theme--border-default;
+                    padding-top: $spv--small;
+                    padding-bottom: $spv--large;
+                }
+            }
+
+            @media screen and (width < $breakpoint-small) {
+                grid-template-columns: auto;
+                grid-template-areas: none;
+                grid-column: span $grid-columns-small;
+
+                .p-3-col-grid__col-header,
+                .p-3-col-grid__col-content,
+                .p-3-col-grid__col-footer {
+                    grid-area: auto;
+                }
+
+                .p-3-col-grid__col-divider::after {
+                    display: block;
+                    width: 100%;
+                }
+            }
+        }
+    }
+}
