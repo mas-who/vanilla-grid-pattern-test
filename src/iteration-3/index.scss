@@ -1,0 +1,152 @@
+@charset "UTF-8";
+@use "sass:map";
+@import "vanilla-framework/scss/build";
+
+.app {
+    height: 100vh;
+    width: 100vw;
+    padding: 100px 0;
+}
+
+.demo [class="p-equal-h-grid__col"] {
+    margin-bottom: 2rem;
+}
+
+.p-equal-h-grid {
+    @extend %vf-row;
+}
+
+.p-equal-h-grid {
+
+    .p-equal-h-grid__title {
+        font-weight: $font-weight-bold;
+        grid-column: span 12;
+        margin-bottom: $spv--x-large;
+
+        & {
+            border-top-width: 1px;
+            border-top-style: solid;
+            border-top-color: $colors--theme--border-default;
+            padding-top: $spv--small;
+        }
+
+        @media screen and (width < $breakpoint-large) {
+            grid-column: span 6;
+        }
+
+        @media screen and (width < $breakpoint-small) {
+            grid-column: span 4;
+        }
+    }
+
+    .p-equal-h-grid__container {
+        display: grid;
+        grid-template-columns: subgrid;
+        margin-bottom: $spv--x-large;
+
+        & [class*=p-equal-h-grid__header-] {
+            grid-column: span 3;
+        }
+
+        & [class*=p-equal-h-grid__content-] {
+            grid-column: span 3;
+            margin-top: 0;
+        }
+        
+        & [class*=p-equal-h-grid__footer-] {
+            grid-column: span 3;
+        }
+        
+        @media screen and (width < $breakpoint-large) {
+            grid-template-areas: 
+                "header-1 content-1"
+                "header-1 footer-1"
+                "header-2 content-2"
+                "header-2 footer-2"
+                "header-3 content-3"
+                "header-3 footer-3"
+                "header-4 content-4"
+                "header-4 footer-4";
+
+            // top border for each 'column'
+            & [class*=p-equal-h-grid__header-]::before,
+            & [class*=p-equal-h-grid__content-]::before {
+                content: '';
+                border-top-width: 1px;
+                border-top-style: solid;
+                border-top-color: $colors--theme--border-default;
+                padding-top: $spv--small;
+                padding-bottom: $spv--small;
+                display: block;
+            }
+            & [class*=p-equal-h-grid__header-]::before {
+                width: calc(100% + 2rem);
+            }
+            & [class*=p-equal-h-grid__content-]::before {
+                width: 100%;
+            }
+
+            @for $i from 1 through 4 {
+                & .p-equal-h-grid__header-#{$i} {
+                    grid-area: header-#{$i};
+                    grid-column: span 3;
+                }
+
+                & .p-equal-h-grid__content-#{$i} {
+                    grid-area: content-#{$i};
+                    grid-column: span 3;
+                    padding-top: 0;
+                }
+
+                & .p-equal-h-grid__footer-#{$i} {
+                    grid-area: footer-#{$i};
+                    grid-column-start: 4;
+                    grid-column-end: span 3;
+                    padding-bottom: $spv--large;
+                }
+            }
+        }
+
+        @media screen and (width < $breakpoint-small) {
+            grid-template-areas: 
+                "header-1"
+                "content-1"
+                "footer-1"
+                "header-2"
+                "content-2"
+                "footer-2"
+                "header-3"
+                "content-3"
+                "footer-3"
+                "header-4"
+                "content-4"
+                "footer-4";
+
+            & [class*=p-equal-h-grid__header-] {
+                grid-column: span 4;
+            }
+    
+            & [class*=p-equal-h-grid__content-] {
+                grid-column: span 4;
+                margin-top: 0;
+            }
+            
+            & [class*=p-equal-h-grid__footer-] {
+                grid-column: span 4;
+            }
+
+            & [class*=p-equal-h-grid__header-]::before,
+            & [class*=p-equal-h-grid__content-]::before {
+                display: none;
+            }
+        }
+
+        .p-equal-h-grid__divider {
+            grid-column: span 12;
+
+            @media screen and (width < $breakpoint-large) {
+                display: none;
+            }
+        }
+    }
+}

@@ -1,0 +1,143 @@
+@charset "UTF-8";
+@use "sass:map";
+@import "vanilla-framework/scss/build";
+
+// TODO: Questions
+// 1. Using grid-template-areas results in non generic implementation for the css grid e.g. requires header etc
+// 2. How generic do we need to be for the implementation?
+// 3. Browser support?
+// 4. This approach can clash with col-medium and col-small classes for non-common patterns grid, currently below large screen size col-medium and col-small classes are disabled
+// 5. For common grid patterns, should we take care of all possible permutations of number of columns available depending on pattern + screen size?
+// 6. This shouldn't be considered cards but would vf users typically use cards for styling these designs?
+// 7. Currently the row class has gap set to '0 2rem' which means there is no row gap, this doesn't look too good?
+// 8. What could be a good semantic name for the class, I don't think subgrid is really indicative of what this layout is functionally trying to achieve
+
+.app {
+    height: 100vh;
+    width: 100vw;
+    padding: 100px 0;
+}
+
+.demo [class~="col"],
+.demo [class|="col"] {
+    margin-bottom: 2rem;
+}
+
+.row,
+.row--50-50,
+.row--50-50-on-medium,
+.row--50-50-on-large,
+.row--25-75,
+.row--25-75-on-medium,
+.row--25-75-on-large,
+.row--25-25-50,
+.row--25-25-25-25 {
+    .is-sg {
+        // NOTE: this assumes there are 3 rows per col
+        display: grid;
+        grid-row: span 3;
+        grid-template-rows: subgrid;
+    
+        @media screen and (width < $breakpoint-large) {
+            .sg-header {
+                grid-area: sg-header;
+            }
+    
+            .sg-content {
+                grid-area: sg-content;
+            }
+    
+            .sg-footer {
+                grid-area: sg-footer;
+            }
+    
+            grid-template-columns: subgrid;
+            grid-template-areas: 
+                "sg-header sg-content"
+                "sg-header sg-footer";
+    
+            &.is-sg {
+                border-top-width: 1px;
+                border-top-style: solid;
+                border-top-color: $colors--theme--border-default;
+                padding-top: $spv--small;
+                padding-bottom: $spv--large;
+            }
+        }
+    }
+}
+
+.row .is-sg {
+    // For non-common patterns, .is-sg will override col-[span] specifications for anything less than large screen size
+    // i.e. col-medium-[span] and col-small-[span] will not have any effect
+
+    // medium screens (max-col === 6)
+    @media screen and (width < $breakpoint-large) {
+        grid-column-end: span 6;
+
+        .sg-header,
+        .sg-content,
+        .sg-footer {
+            grid-column: span 3;
+        }
+    }
+
+    // small screens (max-col === 4)
+    @media screen and (width < $breakpoint-small) {
+        grid-column-end: span 4;
+        .sg-header,
+        .sg-content,
+        .sg-footer {
+            grid-column: span 2;
+        }
+    }
+}
+
+/** common patterns **/
+
+// Assumes that colums with .is-sg is direct child of row
+.row--50-50,
+.row--50-50-on-medium,
+.row--50-50-on-large, .col.is-sg {
+    // medium screens (max-col === 3)
+    @media screen and (width < $breakpoint-large) {
+        .sg-header {
+            grid-column: span 1;
+        }
+        .sg-content,
+        .sg-footer {
+            grid-column: span 2;
+        }
+    }
+
+    // small screens (max-col === 4)
+    @media screen and (width < $breakpoint-small) {
+        .sg-header,
+        .sg-content,
+        .sg-footer {
+            grid-column: span 2;
+        }
+    }
+}
+
+.row--50-50-on-large .col.is-sg {
+    // medium screens (max-col === 6)
+    @media screen and (width < $breakpoint-large) {
+        .sg-header,
+        .sg-content,
+        .sg-footer {
+            grid-column: span 3;
+        }
+    }
+
+    // small screens (max-col === 4)
+    @media screen and (width < $breakpoint-small) {
+        .sg-header,
+        .sg-content,
+        .sg-footer {
+            grid-column: span 2;
+        }
+    }
+}
+
+// TODO: cater for other common patterns

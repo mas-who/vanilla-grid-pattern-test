@@ -1,0 +1,106 @@
+@charset "UTF-8";
+@use "sass:map";
+@import "vanilla-framework/scss/build";
+
+.app {
+    height: 100vh;
+    width: 100vw;
+    padding: 100px 0;
+}
+
+.demo [class="p-equal-h-grid__col"] {
+    margin-bottom: 2rem;
+}
+
+.p-equal-h-grid {
+    @extend %vf-row;
+}
+
+.p-equal-h-grid {
+    .p-equal-h-grid__title {
+        font-weight: $font-weight-bold;
+        grid-column: span 12;
+        margin-bottom: $spv--x-large;
+
+        & {
+            border-top-width: 1px;
+            border-top-style: solid;
+            border-top-color: $colors--theme--border-default;
+            padding-top: $spv--small;
+        }
+
+        @media screen and (width < $breakpoint-large) {
+            grid-column: span 6;
+        }
+
+        @media screen and (width < $breakpoint-small) {
+            grid-column: span 4;
+        }
+    }
+
+    .p-equal-h-grid__col {
+        display: grid;
+        grid-column: span 3;
+        grid-row: span 3;
+        grid-template-rows: subgrid;
+        
+        @media screen and (width < $breakpoint-large) {
+            grid-template-columns: subgrid;
+            grid-template-areas: 
+                "header content"
+                "header footer";
+            grid-column: span 6;
+
+            .p-equal-h-grid__col-header {
+                grid-area: header;
+                grid-column: span 3;
+            }
+    
+            .p-equal-h-grid__col-content {
+                grid-area: content;
+                grid-column: span 3;
+            }
+    
+            .p-equal-h-grid__col-footer {
+                grid-area: footer;
+                grid-column: span 3;
+            }
+    
+            & {
+                border-top-width: 1px;
+                border-top-style: solid;
+                border-top-color: $colors--theme--border-default;
+                padding-top: $spv--small;
+                padding-bottom: $spv--large;
+            }
+        }
+
+        @media screen and (width < $breakpoint-small) {
+            grid-template-columns: auto;
+            grid-template-areas: none;
+            grid-column: span 4;
+            border: none;
+
+            .p-equal-h-grid__col-header,
+            .p-equal-h-grid__col-content,
+            .p-equal-h-grid__col-footer {
+                grid-area: auto;
+            }
+        }
+    }
+
+    & .p-equal-h-grid__col:not(:last-child) {
+        @media screen and (width > $breakpoint-large) {
+            .p-equal-h-grid__divider-full {
+                height: 0;
+            }
+    
+            .p-equal-h-grid__divider-full::after {
+                content: '';
+                display: block;
+                width: calc(100% + 2rem);
+                border-bottom: solid 1px $colors--theme--border-default;
+            }   
+        }
+    }
+}
